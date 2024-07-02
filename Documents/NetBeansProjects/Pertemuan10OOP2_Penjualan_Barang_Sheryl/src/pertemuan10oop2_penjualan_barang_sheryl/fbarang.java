@@ -26,11 +26,11 @@ public class fbarang extends javax.swing.JFrame {
         initComponents();
         model = new DefaultTableModel();
         tabelinput.setModel(model);
-        model.addColumn("kd_barang");
-        model.addColumn("nama_barang");
-        model.addColumn("jumlah_barang");
-        model.addColumn("harga_beli");
-        model.addColumn("harga_jual");
+        model.addColumn("Kode Barang");
+        model.addColumn("Nama Barang");
+        model.addColumn("Jumlah Barang");
+        model.addColumn("Harga Beli");
+        model.addColumn("Harga Jual");
         loadData();
         kode();
     }
@@ -110,7 +110,7 @@ public class fbarang extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnkembali = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -149,7 +149,12 @@ public class fbarang extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Pengolahan data barang");
 
-        jButton1.setText("KEMBALI");
+        btnkembali.setText("KEMBALI");
+        btnkembali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnkembaliActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -159,7 +164,7 @@ public class fbarang extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnkembali)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -168,7 +173,7 @@ public class fbarang extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton1))
+                    .addComponent(btnkembali))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -407,7 +412,7 @@ public class fbarang extends javax.swing.JFrame {
                 txt_hargabeli.setText("");
                 txt_hargajual.setText("");
                 btn_simpan.setEnabled(true);
-                JOptionPane.showMessageDialog(null, "Data berhasil diubah", "Elektronik Berkah", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah", "Himari Pharm", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_editActionPerformed
@@ -480,6 +485,13 @@ public class fbarang extends javax.swing.JFrame {
         txt_hargajual.setText(hjual);
     }//GEN-LAST:event_tabelinputMouseClicked
 
+    private void btnkembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnkembaliActionPerformed
+        // TODO add your handling code here:
+        fmenu fm = new fmenu();
+        fm.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnkembaliActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -520,7 +532,7 @@ public class fbarang extends javax.swing.JFrame {
     private java.awt.Button btn_edit;
     private java.awt.Button btn_hapus;
     private java.awt.Button btn_simpan;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnkembali;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

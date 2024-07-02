@@ -5,17 +5,60 @@
  */
 package pertemuan10oop2_penjualan_barang_sheryl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author acer
  */
 public class fpegawai extends javax.swing.JFrame {
+    private DefaultTableModel model;
 
     /**
      * Creates new form fpegawai
      */
     public fpegawai() {
         initComponents();
+        model = new DefaultTableModel();
+        tabel.setModel(model);
+        model.addColumn("Username");
+        model.addColumn("Jenis Kelamin");
+        model.addColumn("Email");
+        model.addColumn("Nomor Telepon");
+        model.addColumn("Agama");
+        model.addColumn("Alamat");
+        loadData();
+    }
+    
+    public final void loadData() {
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        try {
+            Connection c = Koneksi.getKoneksi();
+            Statement s = c.createStatement();
+            String sql = "SELECT * FROM tbl_login";
+            ResultSet r = s.executeQuery(sql);
+            while (r.next()) {
+                Object[] o = new Object[6];
+                o[0] = r.getString("username");
+                o[1] = r.getString("jenis_kelamin");
+                o[2] = r.getString("email");
+                o[3] = r.getString("no_telp");
+                o[4] = r.getString("agama");
+                o[5] = r.getString("alamat");
+                model.addRow(o);
+            }
+            r.close();
+            s.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "terjadi kesalahan " + e.getMessage());
+        }
     }
 
     /**
@@ -38,24 +81,24 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jTextField4 = new javax.swing.JTextField();
+        txt_username = new javax.swing.JTextField();
+        rl = new javax.swing.JRadioButton();
+        rp = new javax.swing.JRadioButton();
+        txt_email = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        txt_no = new javax.swing.JTextField();
+        cbagama = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        txt_alamat = new javax.swing.JTextArea();
+        btn_tambah = new javax.swing.JButton();
+        btn_hapus = new javax.swing.JButton();
+        btn_ubah = new javax.swing.JButton();
+        txt_pass = new javax.swing.JPasswordField();
+        txt_retype = new javax.swing.JPasswordField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tabel = new javax.swing.JTable();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -124,11 +167,11 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Email");
 
-        jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton1.setText("Laki-Laki");
+        rl.setForeground(new java.awt.Color(255, 255, 255));
+        rl.setText("Laki-Laki");
 
-        jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton2.setText("Perempuan");
+        rp.setForeground(new java.awt.Color(255, 255, 255));
+        rp.setText("Perempuan");
 
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("No. Telp");
@@ -139,17 +182,38 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Alamat");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Kristen Protestan", "Katolik", "Hindu", "Buddha", "Konghucu" }));
+        cbagama.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Kristen Protestan", "Katolik", "Hindu", "Buddha", "Konghucu" }));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txt_alamat.setColumns(20);
+        txt_alamat.setRows(5);
+        jScrollPane1.setViewportView(txt_alamat);
 
-        jButton2.setText("Tambah");
+        btn_tambah.setText("Tambah");
+        btn_tambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambahActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Hapus");
+        btn_hapus.setText("Hapus");
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Ubah");
+        btn_ubah.setText("Ubah");
+        btn_ubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubahActionPerformed(evt);
+            }
+        });
+
+        txt_retype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_retypeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -168,13 +232,13 @@ public class fpegawai extends javax.swing.JFrame {
                         .addGap(26, 26, 26)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
+                                .addComponent(rl)
                                 .addGap(18, 18, 18)
-                                .addComponent(jRadioButton2))
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField4)
-                            .addComponent(jTextField1))
+                                .addComponent(rp))
+                            .addComponent(txt_email)
+                            .addComponent(txt_username)
+                            .addComponent(txt_pass)
+                            .addComponent(txt_retype))
                         .addGap(60, 60, 60)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -182,16 +246,16 @@ public class fpegawai extends javax.swing.JFrame {
                             .addComponent(jLabel9)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(118, 118, 118)
-                        .addComponent(jButton2)
+                        .addComponent(btn_tambah)
                         .addGap(117, 117, 117)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_ubah, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jScrollPane1)
-                        .addComponent(jTextField5)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(txt_no)
+                        .addComponent(cbagama, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -200,42 +264,42 @@ public class fpegawai extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_no, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbagama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_pass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
+                            .addComponent(jLabel9)
+                            .addComponent(txt_retype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jRadioButton2)))
+                                .addComponent(rl, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rp)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btn_tambah)
+                    .addComponent(btn_hapus)
+                    .addComponent(btn_ubah))
                 .addGap(25, 25, 25))
         );
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -246,7 +310,12 @@ public class fpegawai extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane3.setViewportView(jTable2);
+        tabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tabel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -271,7 +340,200 @@ public class fpegawai extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        fmenu fm = new fmenu();
+        fm.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        int i = tabel.getSelectedRow();
+    if (i == -1) {
+        JOptionPane.showMessageDialog(this, "Pilih data yang akan dihapus terlebih dahulu");
+        return;
+    }
+    String username = (String) model.getValueAt(i, 0);
+    
+    try {
+        Connection conn = Koneksi.getKoneksi();
+        String sql = "DELETE FROM tbl_login WHERE username = ?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, username);
+        int rowsAffected = pst.executeUpdate();
+        
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(this, "Berhasil dihapus");
+        } else {
+            JOptionPane.showMessageDialog(this, "Tidak ada data yang dihapus");
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
+    } finally {
+        loadData();
+        txt_username.setText("");
+        txt_pass.setText("");
+        txt_retype.setText("");
+        txt_no.setText("");
+        txt_email.setText("");
+        txt_alamat.setText("");
+        rl.setSelected(false);
+        rp.setSelected(false);
+        cbagama.setSelectedIndex(0);
+    }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
+        // TODO add your handling code here:
+        String jeniskelamin;
+        String agama = (String) cbagama.getSelectedItem();
+        if(rl.isSelected()){
+            jeniskelamin = rl.getText();
+        }
+        else{
+            jeniskelamin = rp.getText();
+        }
+        
+        if(txt_username.getText().equals("") ||txt_pass.getText().equals("") || txt_retype.getText().equals("")|| txt_no.getText().equals("") ||
+                jeniskelamin.equals("")|| txt_email.getText().equals("")|| agama.equals("") || txt_alamat.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "LENGKAPI DATA !", "PT Himari Pharm", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            if(!txt_pass.getText().equals(txt_retype.getText())){
+                JOptionPane.showMessageDialog(null, "Password dan Retype Password tidak sama!", "PT Himari Pharm", JOptionPane.INFORMATION_MESSAGE);
+            } else{
+                String username = txt_username.getText();
+                String password = txt_pass.getText();
+                String email = txt_email.getText();
+                String notelp = txt_no.getText();
+                String alamat = txt_alamat.getText();
+                try {
+                    Connection c = Koneksi.getKoneksi();
+                    if (c == null) {
+                        throw new SQLException("Failed to get database connection.");
+                    }
+                    String sql = "INSERT INTO tbl_login VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement p = c.prepareStatement(sql);
+                   p.setString(1, username);
+                p.setString(2, password);
+                p.setString(3, jeniskelamin);
+                p.setString(4, email);
+                p.setString(5, notelp);
+                p.setString(6, agama);
+                p.setString(7, email);
+                    p.executeUpdate();
+                    p.close(); 
+                } catch (SQLException e) {
+                    System.out.println("Terjadi Error" + e.getMessage());
+                } finally {
+                    loadData();
+                    txt_username.setText("");
+                    txt_pass.setText("");
+                    txt_retype.setText("");
+                    txt_no.setText("");
+                    txt_email.setText("");
+                    txt_alamat.setText("");
+                    rl.setSelected(false);
+                    rp.setSelected(false);
+                    cbagama.setSelectedIndex(0);
+                    JOptionPane.showMessageDialog(null, "Data berhasil tersimpan", "PT Himari Pharm", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_tambahActionPerformed
+
+    private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
+        // TODO add your handling code here
+        String username = txt_username.getText();
+        String password = new String(txt_pass.getPassword());
+        String repassword = new String(txt_retype.getPassword());
+        String gender = rl.isSelected() ? "L" : rp.isSelected() ? "P" : "-";
+        String email = txt_email.getText();
+        String notelp = txt_no.getText();
+        String agama = (String) cbagama.getSelectedItem();
+        String alamat = txt_alamat.getText();
+        if (username.equals("") || gender.equals("") || email.equals("") || notelp.equals("") || agama.equals("") || alamat.equals("")) {
+            JOptionPane.showMessageDialog(null, "Lengkapi Data Pegawai!", "PT Himari Pharm", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            int i = tabel.getSelectedRow();
+            if (i == -1) {
+                return;
+            }
+
+            try {
+                Connection c = Koneksi.getKoneksi();
+                String sql = "";
+                if (!password.equals("")) {
+                    if (password.equals(repassword)) {
+                        sql = "UPDATE tbl_login SET password= '" + password + "',jenis_kelamin= '" + gender + "',email= '" + email + "',no_telp= '" + notelp + "',agama= '" + agama + "',alamat= '" + alamat + "' WHERE username='" + username + "'";
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Password tidak sama!", "Himari Pharm", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } else {
+                    sql = "UPDATE tbl_login SET jenis_kelamin= '" + gender + "',email= '" + email + "',no_telp= '" + notelp + "',agama= '" + agama + "',alamat= '" + alamat + "' WHERE username='" + username + "'";
+                }
+                PreparedStatement p = c.prepareStatement(sql);
+                p.executeUpdate();
+                p.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            } finally {
+                loadData();
+
+                txt_username.setText("");
+                txt_pass.setText("");
+                txt_retype.setText("");
+                rl.setSelected(false);
+                rp.setSelected(false);
+                txt_email.setText("");
+                txt_no.setText("");
+                cbagama.setSelectedIndex(0);
+                txt_alamat.setText("");
+
+                btn_tambah.setEnabled(true);
+                btn_ubah.setEnabled(true);
+                btn_hapus.setEnabled(false);
+
+                JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!", "Aima Store", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }                            
+    }//GEN-LAST:event_btn_ubahActionPerformed
+
+    private void tabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelMouseClicked
+        // TODO add your handling code here:
+        int i = tabel.getSelectedRow();
+    if (i == -1) {
+        return;
+    }
+    String username = (String) model.getValueAt(i, 0);
+    txt_username.setText(username);
+    txt_pass.setEnabled(false);
+    txt_retype.setEnabled(false);
+
+    //String jenis_kelamin = (String) model.getValueAt(i, 1);
+    //if (jenis_kelamin.equals("Laki-Laki")) {
+       // rl.setSelected(true);
+    //} else if (jenis_kelamin.equals("Perempuan")) {
+       // rp.setSelected(true);
+    //}
+
+    String email = (String) model.getValueAt(i, 2);
+    txt_email.setText(email);
+
+    String no_telp = (String) model.getValueAt(i, 3);
+    txt_no.setText(no_telp);
+
+    String agama = (String) model.getValueAt(i, 4);
+    cbagama.setSelectedItem(agama);
+
+    String alamat = (String) model.getValueAt(i, 5);
+    txt_alamat.setText(alamat);
+    
+    btn_tambah.setEnabled(false);
+    }//GEN-LAST:event_tabelMouseClicked
+
+    private void txt_retypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_retypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_retypeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -310,11 +572,11 @@ public class fpegawai extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_hapus;
+    private javax.swing.JButton btn_tambah;
+    private javax.swing.JButton btn_ubah;
+    private javax.swing.JComboBox<String> cbagama;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -326,18 +588,18 @@ public class fpegawai extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JRadioButton rl;
+    private javax.swing.JRadioButton rp;
+    private javax.swing.JTable tabel;
+    private javax.swing.JTextArea txt_alamat;
+    private javax.swing.JTextField txt_email;
+    private javax.swing.JTextField txt_no;
+    private javax.swing.JPasswordField txt_pass;
+    private javax.swing.JPasswordField txt_retype;
+    private javax.swing.JTextField txt_username;
     // End of variables declaration//GEN-END:variables
 }

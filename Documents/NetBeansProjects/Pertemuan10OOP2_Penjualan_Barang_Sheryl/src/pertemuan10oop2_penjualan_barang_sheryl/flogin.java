@@ -87,6 +87,11 @@ public class flogin extends javax.swing.JFrame {
         btn_logout.setBackground(new java.awt.Color(204, 204, 204));
         btn_logout.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btn_logout.setText("LOGOUT");
+        btn_logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_logoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -184,6 +189,11 @@ public class flogin extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btn_loginActionPerformed
+
+    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_logoutActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_btn_logoutActionPerformed
 
     /**
      * @param args the command line arguments
